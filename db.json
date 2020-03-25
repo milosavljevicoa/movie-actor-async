@@ -1,0 +1,62 @@
+{
+    "movies": [
+        {
+            "id": 1,
+            "title": "Player one ready",
+            "realse-year": 2018,
+            "actors": {
+                "1": 4,
+                "2": 1,
+                "3": 5
+            }
+        },
+        {
+            "id": 2,
+            "title": "Doom Returns",
+            "realse-year": 2015,
+            "actors": {
+                "1": 2,
+                "2": 3,
+                "3": 1
+            }
+        },
+        {
+            "id": 3,
+            "title": "The Circle",
+            "realse-year": 2011,
+            "actors": {
+                "1": 4,
+                "2": 2,
+                "3": 5,
+                "4": 1
+            }
+        }
+    ],
+    "actors": [
+        {
+            "id": 1,
+            "ime": "Annalise",
+            "prezime": "Davidson"
+        },
+        {
+            "id": 2,
+            "ime": "Phillip",
+            "prezime": "Green"
+        },
+        {
+            "id": 3,
+            "ime": "Joe",
+            "prezime": "Tribbiani"
+        },
+        {
+            "id": 4,
+            "ime": "Ross",
+            "prezime": "Geller"
+        },
+        {
+            "id": 5,
+            "ime": "Cicorito",
+            "prezime": "Miko"
+        }
+    ]
+}

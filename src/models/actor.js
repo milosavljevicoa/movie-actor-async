@@ -9,6 +9,10 @@ class Actor {
 		movieListItem.innerHTML = this.name + " " + this.surname;
 		host.appendChild(movieListItem);
 	}
+
+	static createActorFromLiteral(actorLiteral) {
+		return new Actor(actorLiteral["ime"], actorLiteral["prezime"]);
+	}
 }
 
 export default Actor;

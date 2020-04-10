@@ -3,10 +3,9 @@ import Movie from "../models/movie";
 import { fromEvent } from "rxjs";
 import { debounceTime, map, switchMap, catchError } from "rxjs/operators";
 
-const DATA_BASE_URL = "http://localhost:3000/";
-// const DATA_BASE_URL =
-// "https://my-json-server.typicode.com/milosavljevicoa/Aleksandar-Milosavljevic-16722/";
-
+// const DATA_BASE_URL = "http://localhost:3000/";
+const DATA_BASE_URL =
+	"https://my-json-server.typicode.com/milosavljevicoa/movie-actor-async";
 export async function getAllMovies() {
 	const moviesResponse = await fetch(DATA_BASE_URL + "movies");
 	const moviesArray = await moviesResponse.json();

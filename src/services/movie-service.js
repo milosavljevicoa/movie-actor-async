@@ -1,11 +1,12 @@
 import Actor from "../models/actor";
 import Movie from "../models/movie";
-import { fromEvent } from "rxjs";
-import { debounceTime, map, switchMap, catchError } from "rxjs/operators";
+import { fromEvent, from, zip, Observable } from "rxjs";
+import { debounceTime, map, switchMap, mergeMap } from "rxjs/operators";
 
-// const DATA_BASE_URL = "http://localhost:3000/";
-const DATA_BASE_URL =
-	"https://my-json-server.typicode.com/milosavljevicoa/movie-actor-async";
+const DATA_BASE_URL = "http://localhost:3000/";
+// const DATA_BASE_URL =
+// 	"https://my-json-server.typicode.com/milosavljevicoa/movie-actor-async/";
+
 export async function getAllMovies() {
 	const moviesResponse = await fetch(DATA_BASE_URL + "movies");
 	const moviesArray = await moviesResponse.json();
@@ -21,23 +22,25 @@ export function addEventToInput(inputElement, actorsList) {
 		.pipe(
 			debounceTime(1000),
 			map((ev) => ev.target.value),
-			switchMap((movieTitle) => getDetailsAboutMovie(movieTitle))
+			switchMap((movieDetails) => {
+				return getDetailsAboutMovie(movieDetails);
+			})
 		)
 		.subscribe((movie) => {
 			movie.drawDescription(movieDescriptionElement);
 		});
 }
 
-export async function getDetailsAboutMovie(movieTitle) {
+function getDetailsAboutMovie(movieTitle) {
 	const queryStringMovie = "?title=" + formatMovieTitleToDb(movieTitle);
-	const movieLiteral = await getMovieDetailsJSON(queryStringMovie);
-	const movie = createMovieOrMovieError(movieLiteral);
-	if (!movie.isMovieError()) {
-		const actorIDs = getValuesFromObjectArray(movieLiteral["actors"]);
-		const allActors = await getAllActorsByArrayOfID(actorIDs);
-		movie.actors = allActors;
-	}
-	return movie;
+
+	const movieObservable = getMovieDetails(queryStringMovie);
+	return movieObservable.pipe(
+		switchMap((movieLiteral) => {
+			const movie = createMovieOrMovieError(movieLiteral);
+			return getMovieObservable(movieLiteral, movie);
+		})
+	);
 }
 
 function formatMovieTitleToDb(movieTitle) {
@@ -50,38 +53,54 @@ function formatMovieTitleToDb(movieTitle) {
 	return returnVal;
 }
 
-async function getMovieDetailsJSON(queryStringMovie) {
-	let movieDetails;
-	let movieDetailsResponse = await fetch(
-		DATA_BASE_URL + "movies/" + queryStringMovie
-	);
-	movieDetails = await movieDetailsResponse.json();
-	movieDetails = movieDetails[0];
-	return movieDetails;
+function getMovieDetails(queryStringMovie) {
+	return from(
+		fetch(DATA_BASE_URL + "movies/" + queryStringMovie).then((response) =>
+			response.json()
+		)
+	).pipe(map((movieDetails) => movieDetails[0]));
 }
 
 function createMovieOrMovieError(movieLiteral) {
-	return movieLiteral === undefined
-		? Movie.createErrorMovie()
-		: Movie.createMovieFromLiteral(movieLiteral);
+	return movieLiteral !== undefined
+		? Movie.createMovieFromLiteral(movieLiteral)
+		: Movie.createErrorMovie();
+}
+
+function getMovieObservable(movieLiteral, movie) {
+	let movieObservable;
+	if (movieLiteral !== undefined) {
+		const actorIDs = getValuesFromObjectArray(movieLiteral["actors"]);
+		movieObservable = getAllActorsByArrayOfID(actorIDs).pipe(
+			map((actors) => {
+				let actorsObject = actors.map((actor) =>
+					Actor.createActorFromLiteral(actor)
+				);
+				movie.actors = actorsObject;
+				return movie;
+			})
+		);
+	} else {
+		movieObservable = Observable.create((observer) => {
+			observer.next(movie);
+		});
+	}
+	return movieObservable;
 }
 
 function getValuesFromObjectArray(objectArray) {
 	return Object.values(objectArray).map((value) => parseInt(value));
 }
 
-async function getAllActorsByArrayOfID(actorIDArray) {
-	let allActorsPromise = actorIDArray.map((id) => getActorDetailsJSON(id));
-	let allActors = await Promise.all(allActorsPromise);
-	allActors = allActors.map((actorLiteral) => {
-		return Actor.createActorFromLiteral(actorLiteral);
-	});
-	return allActors;
+function getAllActorsByArrayOfID(actorIDArray) {
+	let actorsOvservable = actorIDArray.map((id) => getActorDetails(id));
+	return zip(...actorsOvservable);
 }
 
-async function getActorDetailsJSON(actorID) {
+function getActorDetails(actorID) {
 	const specificActor = "actors/" + actorID;
-	const actorDetailsPromise = await fetch(DATA_BASE_URL + specificActor);
-	const actorDetails = actorDetailsPromise.json();
-	return actorDetails;
+	let url = DATA_BASE_URL + specificActor;
+	return from(
+		fetch(url).then((promise) => promise.json().then((data) => data))
+	);
 }

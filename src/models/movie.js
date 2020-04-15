@@ -39,6 +39,10 @@ export default class Movie {
 		);
 	}
 
+	static doesMovieExist(movieLiteral) {
+		return movieLiteral != undefined;
+	}
+
 	isMovieError() {
 		return this.id === -1;
 	}

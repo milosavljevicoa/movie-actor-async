@@ -73,10 +73,7 @@ function getMovieObservable(movieLiteral, movie) {
 		const actorIDs = getValuesFromObjectArray(movieLiteral["actors"]);
 		movieObservable = getAllActorsByArrayOfID(actorIDs).pipe(
 			map((actors) => {
-				let actorsObject = actors.map((actor) =>
-					Actor.createActorFromLiteral(actor)
-				);
-				movie.actors = actorsObject;
+				movie.actors = actors;
 				return movie;
 			})
 		);
@@ -94,7 +91,13 @@ function getValuesFromObjectArray(objectArray) {
 
 function getAllActorsByArrayOfID(actorIDArray) {
 	let actorsOvservable = actorIDArray.map((id) => getActorDetails(id));
-	return zip(...actorsOvservable);
+	return zip(...actorsOvservable).pipe(
+		map((actorsLiteral) =>
+			actorsLiteral.map((actorLiteral) =>
+				Actor.createActorFromLiteral(actorLiteral)
+			)
+		)
+	);
 }
 
 function getActorDetails(actorID) {

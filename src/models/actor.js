@@ -11,6 +11,7 @@ class Actor {
 	}
 
 	static createActorFromLiteral(actorLiteral) {
+		console.log(actorLiteral);
 		return new Actor(actorLiteral["ime"], actorLiteral["prezime"]);
 	}
 }

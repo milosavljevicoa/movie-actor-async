@@ -1,15 +1,23 @@
-const path = require("path"); //slicno kao import
+const path = require("path");
 
 module.exports = {
-	entry: "./index.js", //gde se nalazi "glavni" js fajl
-	devtool: "inline-source-map", //za debagiranje
+	entry: "./src/index.ts",
+	devtool: "inline-source-map",
 	output: {
-		path: path.resolve(__dirname, "dist"), //trenutnu folder name i dodaj mu dist
-		filename: "bundle.js", //bundle-ovan fajl
-		publicPath: "/dist", //sta znaci ovo???
+		path: path.resolve(__dirname, "dist"),
+		filename: "bundle.js",
+		publicPath: "/dist",
 	},
-	devServer: {
-		contentBase: ".", //ovo trazi index.html?
-		// watchContentBase: true,
+	module: {
+		rules: [
+			{
+				test: /\.tsx?$/,
+				use: "ts-loader",
+				exclude: /node_modules/,
+			},
+		],
+	},
+	resolve: {
+		extensions: [".tsx", ".ts", ".js"],
 	},
 };

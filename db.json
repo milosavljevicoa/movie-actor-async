@@ -3,7 +3,7 @@
         {
             "id": 1,
             "title": "Player One Ready",
-            "realse-year": 2018,
+            "realseYear": 2018,
             "description": "Duis sit amet malesuada sapien, sed imperdiet metus. Maecenas in mauris sit amet augue bibendum viverra. Proin sed nibh dictum, blandit justo quis, vulputate magna. Donec tristique, augue quis viverra laoreet, nisl nunc fermentum eros, ac aliquet nunc ante sit amet elit. Aliquam lobortis, ante vitae commodo iaculis, libero ipsum auctor enim, vitae ornare mauris nulla volutpat ante. Aliquam at sem ex. Praesent ut turpis mauris. Sed at mollis ligula. Aliquam quis magna neque. ",
             "actors": {
                 "1": 4,
@@ -14,7 +14,7 @@
         {
             "id": 2,
             "title": "Doom Returns",
-            "realse-year": 2015,
+            "realseYear": 2015,
             "description": "Fusce nec elit in arcu viverra commodo at vel lorem. Donec accumsan tellus sit amet mattis ultrices. Phasellus maximus in risus sed ornare.",
             "actors": {
                 "1": 2,
@@ -25,7 +25,7 @@
         {
             "id": 3,
             "title": "The Circle",
-            "realse-year": 2011,
+            "realseYear": 2011,
             "description": "Etiam quam velit, vestibulum sed porttitor scelerisque, condimentum vitae ligula. Donec in tellus vitae arcu blandit egestas. Maecenas imperdiet leo nec massa aliquet, in consectetur sapien malesuada. Etiam varius imperdiet egestas. Quisque consequat, tortor sit amet eleifend volutpat, erat orci consectetur libero, ac maximus odio tortor sit amet ipsum. Sed elit erat, tincidunt vitae tincidunt ut, placerat eget tellus. Nullam et suscipit dui. ",
             "actors": {
                 "1": 4,
